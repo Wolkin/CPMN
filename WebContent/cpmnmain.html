@@ -209,8 +209,10 @@
 				}
 				bettingRecord[r] = temp + ";";
 			}
-			window.open("DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord);
-			window.location.reload();
+			if(confirm('你确定提交押注吗？')) {
+				window.open("DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord);
+				window.location.reload();
+			}
 		}
 	</script>
 </html>

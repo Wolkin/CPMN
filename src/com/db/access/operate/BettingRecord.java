@@ -84,6 +84,7 @@ public class BettingRecord {
 		
 		try {
 			stat = conn.createStatement();
+			System.out.println(sSql);
 			stat.execute(sSql);
 			stat.close();
 			conn.close();

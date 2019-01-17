@@ -11,6 +11,7 @@
 </head>
 <%
 	String bettingRecord = request.getParameter("bettingRecord").replace(";,", ";");
+		
 	int n = 0;
 	String[][] dataRecord = new String[10][7];
 	String rRecord[] = bettingRecord.split(";");
@@ -23,6 +24,15 @@
 	
 	String[][] tempRecord = new String[n][7];
 	tempRecord = Arrays.copyOfRange(dataRecord, 0, n);
+	
+	//控制台输出押注彩票日志记录
+	System.out.println("彩票押注数据信息日志：");
+	for(int m = 0 ; m < tempRecord.length ; m ++) {
+		for(int l = 0 ; l < tempRecord[m].length ; l++) {
+			System.out.print(tempRecord[m][l] + " ");
+		}
+		System.out.print("\n");
+	}
 	
 	//数据插入数据库记录
 	BettingRecord record = new BettingRecord();
