@@ -107,7 +107,7 @@
 		    <%
             try {
         		stat = conn.createStatement();
-        		String sSql = " select expect,user,sum(investment) as investment,sum(profit) as profit " + 
+        		String sSql = " select expect,sum(investment) as investment,sum(profit) as profit,(sum(profit) - sum(investment)) as result" + 
         					  " from Betting_Record " + 
 		        			  " where 1 = 1 " + 
         					  " group by expect,user " + 
@@ -117,9 +117,9 @@
             %>
 		                                <tr>
 		                                    <td><%=rs.getString("expect") %></td>
-		                                    <td><%=rs.getString("user") %> </td>
-		                                    <td><%=rs.getInt("investment") %></td>
+		                                    <td><%=rs.getInt("investment") %> </td>
 		                                    <td><%=rs.getDouble("profit") %></td>
+		                                    <td><%=rs.getDouble("result") %></td>
 		                                </tr>
 		    <%
 		    	}
