@@ -1,4 +1,17 @@
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="com.db.access.DBConnection"%>
+<%@page import="java.sql.SQLException"%>
+<%
+	/* 投注纪录展示 */
+	ResultSet rs = null;
+	Connection conn = new DBConnection().getConnection();
+	Statement stat;
+%>
 <html>
 	<head>
 		<meta charset="utf-8"> 
@@ -70,25 +83,58 @@
 							<a href="../cpmnmain.html"><b>彩票竞猜</b></a>
 						</li>
 						<li>
-							<a href="../History/historymain.html"><b>历史结果</b></a>
+							<a href="../History/historymain.jsp"><b>投注记录</b></a>
 						</li>
 						<li class="active">
-							<a href="../Mine/minemain.html"><b>我的收益</b></a>
+							<a href="../Mine/minemain.jsp"><b>我的收益</b></a>
 						</li>
 					</ul>
 					<div class="row-fluid">
-						<div class="span12">
-							<form>
-								<fieldset>
-									 <legend>我的收益</legend>
-									 
-									 <span class="help-block">这里填写帮助信息.</span>
-									 <label class="checkbox">
-									 <input type="checkbox" /> 勾选同意</label>
-									 <button type="submit" class="btn">提交</button>
-								</fieldset>
-							</form>
-						</div>
+						<!-- Table Striped -->
+		                <div class="block-area" id="tableStriped">
+		                    <h3 class="block-title">My income</h3>
+		                    <div class="table-responsive overflow">
+		                        <table class="tile table table-bordered table-striped">
+		                            <thead>
+		                                <tr>
+		                                    <th>期次</th>
+		                                    <th>投入</th>
+		                                    <th>收益</th>
+		                                    <th>盈亏</th>
+		                                </tr>
+		                            </thead>
+		                            <tbody>
+		    <%
+            try {
+        		stat = conn.createStatement();
+        		String sSql = " select expect,user,sum(investment) as investment,sum(profit) as profit " + 
+        					  " from Betting_Record " + 
+		        			  " where 1 = 1 " + 
+        					  " group by expect,user " + 
+		        			  " order by expect desc ";
+        		rs = stat.executeQuery(sSql);
+        		while (rs.next()) {
+            %>
+		                                <tr>
+		                                    <td><%=rs.getString("expect") %></td>
+		                                    <td><%=rs.getString("user") %> </td>
+		                                    <td><%=rs.getInt("investment") %></td>
+		                                    <td><%=rs.getDouble("profit") %></td>
+		                                </tr>
+		    <%
+		    	}
+				rs.getStatement().close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			%>
+		                            </tbody>
+		                        </table>
+		                    </div>
+		                </div>
+		                <hr width=98%>
+		                <br>
 					</div>
 				</div>
 			</div>

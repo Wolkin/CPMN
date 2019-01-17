@@ -9,4 +9,26 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
+  
+  <!-- ================================== -->
+  <!--            初始化Web数据                               -->
+  <!-- ================================== -->
+  <!-- 
+  <servlet>
+  	<servlet-name>InitDataServlet</servlet-name>
+  	<servlet-class>com.web.dev.InitDataServlet</servlet-class>
+  	<init-param>
+  		<param-name>AppHome</param-name>
+  		<param-value>/WEB-INF</param-value>
+  	</init-param>
+  	<load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <resource-ref id="ResourceRef_1">
+  	<res-ref-name>jdbc/mydb</res-ref-name>
+  	<res-type>javax.sql.DataSource</res-type>
+  	<res-auth>Application</res-auth>
+  	<res-sharing-scope>Shareable</res-sharing-scope>
+  </resource-ref>
+  -->
 </web-app>
