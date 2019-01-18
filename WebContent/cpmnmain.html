@@ -217,12 +217,27 @@
 		
 		//提交投注彩票
 		function doSubMit() {
-			var pattern = /^[1-33]$/;
+			var red = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33";
+			var blue = "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16";
 			var bettingRecord = new Array();
 			for(var r = 0 ; r <= iCount ; r++) {
 				var temp = new Array();
 				for(var c = 0 ; c <= 6 ; c ++) {
 					temp[c] = document.getElementById("n" + c + r).value;
+					var isRight;
+					if(c == 6) {
+						isRight = blue.indexOf(temp[c]);
+						if(isRight == -1 || temp[c] == 0) {
+							alert("第 " + (r + 1) + " 注蓝色球号码异常!");
+							return false;
+						}
+					}else {
+						isRight = red.indexOf(temp[c]);
+						if(isRight == -1 || temp[c] == 0) {
+							alert("第 " + (r + 1) + " 注，第 " + (c + 1) + " 个红色球异常!");
+							return false;
+						}
+					}
 				}
 				bettingRecord[r] = temp + ";";
 			}
