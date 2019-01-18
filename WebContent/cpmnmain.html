@@ -78,7 +78,7 @@
 					</ul>
 					<div class="row-fluid">
 						<div class="span12">
-							<form>
+							<form id="bettingForm">
 								<fieldset>
 									 <legend>选择彩票号</legend>
 									 <div class="row">
@@ -189,9 +189,25 @@
 		
 		//随机产生投注号
 		function rdmNum() {
+			
 			for(var r = 0 ; r <= iCount ; r++) {
+				var numArray = "";
+				var flag,num;
 				for(var c = 0 ; c <= 6 ; c ++) {
-					document.getElementById("n" + c + r).value = Math.round(Math.random()*33 + 0.5);
+					do{
+						//产生红色球号码
+						num = Math.round(Math.random()*33 + 0.5);
+						//校验不产生重复红色球号码
+						flag = numArray.indexOf("'" + num + "'");
+						
+						
+						if(flag == -1) {
+							document.getElementById("n" + c + r).value = num;
+							numArray = numArray + ",'" + num + "'";
+						}
+					}while(flag != -1)
+					
+					//产生蓝色球号码
 					if(c == 6) {
 						document.getElementById("n" + c + r).value = Math.round(Math.random()*16 + 0.5);
 					}
@@ -201,6 +217,7 @@
 		
 		//提交投注彩票
 		function doSubMit() {
+			var pattern = /^[1-33]$/;
 			var bettingRecord = new Array();
 			for(var r = 0 ; r <= iCount ; r++) {
 				var temp = new Array();
@@ -210,7 +227,11 @@
 				bettingRecord[r] = temp + ";";
 			}
 			if(confirm('你确定提交押注吗？')) {
-				window.open("DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord);
+				var a = document.createElement("a");
+				a.setAttribute("href", "DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord);
+				a.setAttribute("target", "_blank");
+				document.body.appendChild(a);
+				a.click(); //执行当前对象
 				window.location.reload();
 			}
 		}
