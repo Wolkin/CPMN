@@ -1,25 +1,123 @@
-package com.servlet;
+package com.web.lottery.result;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 
-public class URLTest {
+import com.db.access.DBConnection;
+
+public class URLLotteryBatch {
 	private static StringBuffer mStringBuffer = new StringBuffer();
 	
     public static void main(String[] args) {
-    	URLTest test = new URLTest();
+    	String expect = "";
+    	String redball1 = "";
+    	String redball2 = "";
+    	String redball3 = "";
+    	String redball4 = "";
+    	String redball5 = "";
+    	String redball6 = "";
+    	String blueball = "";
+    	String opentime = "";
+    	String opentimestamp = "";
+    	
+    	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	
+    	Connection conn = new DBConnection().getConnection();
+    	Statement stat = null;
+    	
+    	LotteryRecord temp = null;
+    	
+    	URLLotteryBatch test = new URLLotteryBatch();
     	ArrayList<LotteryRecord> list = test.getLotteryList("http://kaijiang.zhcw.com/zhcw/html/ssq/list_1.html");
+    	
+    	System.out.println("-------福利彩票网站获取的开奖结果记录-------");
     	for (LotteryRecord lotteryRecord: list) {
+    		if(temp == null) {
+    			temp = lotteryRecord;
+    		}else {
+    			if(lotteryRecord.getLotteryTerm().compareTo(temp.getLotteryTerm()) > 0) {
+        			temp = lotteryRecord;
+        		}
+    		}
+    		
     		System.out.println(lotteryRecord.toString());
     	}
-
+    	System.out.println("-------<<<<<<<<<<<<<>>>>>>>>>>>>>>>-------");
+    	
+    	System.out.println("最新一期开奖结果：" + temp.toString());
+    	expect = temp.getLotteryTerm();
+    	redball1 = temp.getLotteryNumbers()[0];
+    	redball2 = temp.getLotteryNumbers()[1];
+    	redball3 = temp.getLotteryNumbers()[2];
+    	redball4 = temp.getLotteryNumbers()[3];
+    	redball5 = temp.getLotteryNumbers()[4];
+    	redball6 = temp.getLotteryNumbers()[5];
+    	blueball = temp.getLotteryNumbers()[6];
+    	opentime = temp.getRecordDate();
+    	opentimestamp = df.format(new Date());
+    	
+    	String sSql = " insert into Lottery_Result(expect,redball1,redball2,redball3,redball4,redball5,redball6,blueball,opentime,opentimestamp) " + 
+				      " values ( " + 
+				      " '" + expect + "'," + 
+				      " '" + redball1 + "'," + 
+				      " '" + redball2 + "'," + 
+				      " '" + redball3 + "'," + 
+				      " '" + redball4 + "'," + 
+				      " '" + redball5 + "'," + 
+				      " '" + redball6 + "'," + 
+				      " '" + blueball + "'," + 
+				      " '" + opentime + "'," +
+				      " '" + opentimestamp + "'" + 
+				      ")";
+    	
+    	try {
+			stat = conn.createStatement();
+			System.out.println(sSql);
+			ResultSet rs = stat.executeQuery("select count(*) as num from Lottery_Result where expect = '" + expect + "' ");
+			if(rs.next()) {
+				if(rs.getInt("num") > 0) {
+					System.out.println("已经存在该期记录！");
+				}else {
+					stat.execute(sSql);
+				}
+			}
+			rs.getStatement().close();
+			
+			stat.close();
+			conn.close();
+		} catch (SQLException e) {
+			if (stat != null) {
+				try {
+					stat.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     public ArrayList<LotteryRecord> getLotteryList(String urlInfo) {
@@ -37,7 +135,7 @@ public class URLTest {
     }
     
     public String getURLInfoString(String urlInfo) throws Exception {
-        //读取目的网页URL地址，获取网页源码
+        //读取目的网页URL地址，获取网页源�?
         URL url = new URL(urlInfo);
         HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
         httpUrl.setRequestMethod("POST");
@@ -45,12 +143,12 @@ public class URLTest {
         httpUrl.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/vnd.ms-powerpoint, application/vnd.ms-excel, application/msword, */*");
         httpUrl.setRequestProperty("Accept-Language", "zh-cn");
         httpUrl.setRequestProperty("UA-CPU", "x86");	
-        // 为什么没有deflate呢
+        // 为什么没有deflate�?
         httpUrl.setRequestProperty("Accept-Encoding", "gzip");
         httpUrl.setRequestProperty("Content-type", "text/html");
-        // keep-Alive，有什么用呢，你不是在访问网站，你是在采集。嘿嘿。减轻别人的压力，也是减轻自己。
+        // keep-Alive，有�?么用呢，你不是在访问网站，你是在采集。嘿嘿�?�减轻别人的压力，也是减轻自己�??
         httpUrl.setRequestProperty("Connection", "close");
-        // 不要用cache，用了也没有什么用，因为我们不会经常对一个链接频繁访问。（针对程序）
+        // 不要用cache，用了也没有�?么用，因为我们不会经常对�?个链接频繁访问�?�（针对程序�?
         httpUrl.setUseCaches(false);
         httpUrl.setConnectTimeout(6 * 1000);
         httpUrl.setReadTimeout(6 * 1000);
@@ -85,7 +183,7 @@ public class URLTest {
     }
 
     /**
-     * 获取一期开奖结果HTML
+     * 获取�?期开奖结果HTML
      * @param pageContent
      * @return
      */
@@ -102,14 +200,14 @@ public class URLTest {
     }
 
     /**
-     * 从一期开奖结果HTML中解析出开奖记录
+     * 从一期开奖结果HTML中解析出�?奖记�?
      * @param oneTermContent
      * @return
      */
     private LotteryRecord getOneTermNumbers(String oneTermContent) {
     	LotteryRecord lotteryRecord = new LotteryRecord();
     	/**
-    	 * 开奖日期
+    	 * �?奖日�?
     	 */
     	String ballDateRegex = ">\\d{4}-\\d{2}-\\d{2}<";
     	Pattern pattern = Pattern.compile(ballDateRegex);
@@ -156,9 +254,9 @@ public class URLTest {
 }
 
 class LotteryRecord {
-    private String recordDate;	//开奖日期
+    private String recordDate;	//�?奖日�?
     private String lotteryTerm;	//期次
-    private String[] lotteryNumbers;	//开奖号码
+    private String[] lotteryNumbers;	//�?奖号�?
     public String getRecordDate() {
         return recordDate;
     }
