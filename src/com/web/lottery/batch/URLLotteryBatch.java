@@ -1,4 +1,4 @@
-package com.web.lottery.result;
+package com.web.lottery.batch;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,8 +16,6 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
-
-import com.db.access.DBConnection;
 
 public class URLLotteryBatch {
 	private static StringBuffer mStringBuffer = new StringBuffer();
@@ -43,7 +42,7 @@ public class URLLotteryBatch {
     	URLLotteryBatch test = new URLLotteryBatch();
     	ArrayList<LotteryRecord> list = test.getLotteryList("http://kaijiang.zhcw.com/zhcw/html/ssq/list_1.html");
     	
-    	System.out.println("-------ç¦åˆ©å½©ç¥¨ç½‘ç«™è·å–çš„å¼€å¥–ç»“æœè®°å½•-------");
+    	System.out.println("-------¸£Àû²ÊÆ±ÍøÕ¾»ñÈ¡µÄ¿ª½±½á¹û¼ÇÂ¼-------");
     	for (LotteryRecord lotteryRecord: list) {
     		if(temp == null) {
     			temp = lotteryRecord;
@@ -57,7 +56,7 @@ public class URLLotteryBatch {
     	}
     	System.out.println("-------<<<<<<<<<<<<<>>>>>>>>>>>>>>>-------");
     	
-    	System.out.println("æœ€æ–°ä¸€æœŸå¼€å¥–ç»“æœï¼š" + temp.toString());
+    	System.out.println("×îĞÂÒ»ÆÚ¿ª½±½á¹û£º" + temp.toString());
     	expect = temp.getLotteryTerm();
     	redball1 = temp.getLotteryNumbers()[0];
     	redball2 = temp.getLotteryNumbers()[1];
@@ -85,11 +84,12 @@ public class URLLotteryBatch {
     	
     	try {
 			stat = conn.createStatement();
+			Statement stat1 = conn.createStatement();
 			System.out.println(sSql);
-			ResultSet rs = stat.executeQuery("select count(*) as num from Lottery_Result where expect = '" + expect + "' ");
+			ResultSet rs = stat1.executeQuery("select count(*) as num from Lottery_Result where expect = '" + expect + "' ");
 			if(rs.next()) {
 				if(rs.getInt("num") > 0) {
-					System.out.println("å·²ç»å­˜åœ¨è¯¥æœŸè®°å½•ï¼");
+					System.out.println("ÒÑ¾­´æÔÚ¸ÃÆÚ¼ÇÂ¼£¡");
 				}else {
 					stat.execute(sSql);
 				}
@@ -135,7 +135,7 @@ public class URLLotteryBatch {
     }
     
     public String getURLInfoString(String urlInfo) throws Exception {
-        //è¯»å–ç›®çš„ç½‘é¡µURLåœ°å€ï¼Œè·å–ç½‘é¡µæºï¿½?
+        //¶ÁÈ¡Ä¿µÄÍøÒ³URLµØÖ·£¬»ñÈ¡ÍøÒ³Ô´
         URL url = new URL(urlInfo);
         HttpURLConnection httpUrl = (HttpURLConnection) url.openConnection();
         httpUrl.setRequestMethod("POST");
@@ -143,12 +143,12 @@ public class URLLotteryBatch {
         httpUrl.setRequestProperty("Accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, application/x-shockwave-flash, application/vnd.ms-powerpoint, application/vnd.ms-excel, application/msword, */*");
         httpUrl.setRequestProperty("Accept-Language", "zh-cn");
         httpUrl.setRequestProperty("UA-CPU", "x86");	
-        // ä¸ºä»€ä¹ˆæ²¡æœ‰deflateï¿½?
+        // ÎªÊ²Ã´Ã»ÓĞdeflate
         httpUrl.setRequestProperty("Accept-Encoding", "gzip");
         httpUrl.setRequestProperty("Content-type", "text/html");
-        // keep-Aliveï¼Œæœ‰ï¿½?ä¹ˆç”¨å‘¢ï¼Œä½ ä¸æ˜¯åœ¨è®¿é—®ç½‘ç«™ï¼Œä½ æ˜¯åœ¨é‡‡é›†ã€‚å˜¿å˜¿ï¿½?ï¿½å‡è½»åˆ«äººçš„å‹åŠ›ï¼Œä¹Ÿæ˜¯å‡è½»è‡ªå·±ï¿½??
+        // keep-Alive£¬ÓĞÃ´ÓÃÄØ£¬Äã²»ÊÇÔÚ·ÃÎÊÍøÕ¾£¬ÄãÊÇÔÚ²É¼¯¡£ºÙºÙ¼õÇá±ğÈËµÄÑ¹Á¦£¬Ò²ÊÇ¼õÇá×Ô¼º
         httpUrl.setRequestProperty("Connection", "close");
-        // ä¸è¦ç”¨cacheï¼Œç”¨äº†ä¹Ÿæ²¡æœ‰ï¿½?ä¹ˆç”¨ï¼Œå› ä¸ºæˆ‘ä»¬ä¸ä¼šç»å¸¸å¯¹ï¿½?ä¸ªé“¾æ¥é¢‘ç¹è®¿é—®ï¿½?ï¿½ï¼ˆé’ˆå¯¹ç¨‹åºï¿½?
+        // ²»ÒªÓÃcache£¬ÓÃÁËÒ²Ã»ÓĞÃ´ÓÃ£¬ÒòÎªÎÒÃÇ²»»á¾­³£¶Ô¸öÁ´½ÓÆµ·±·ÃÎÊ
         httpUrl.setUseCaches(false);
         httpUrl.setConnectTimeout(6 * 1000);
         httpUrl.setReadTimeout(6 * 1000);
@@ -183,7 +183,7 @@ public class URLLotteryBatch {
     }
 
     /**
-     * è·å–ï¿½?æœŸå¼€å¥–ç»“æœHTML
+     * »ñÈ¡ÆÚ¿ª½±½á¹ûHTML
      * @param pageContent
      * @return
      */
@@ -200,14 +200,14 @@ public class URLLotteryBatch {
     }
 
     /**
-     * ä»ä¸€æœŸå¼€å¥–ç»“æœHTMLä¸­è§£æå‡ºï¿½?å¥–è®°ï¿½?
+     * ´ÓÒ»ÆÚ¿ª½±½á¹ûHTMLÖĞ½âÎö³ö½±¼Ç
      * @param oneTermContent
      * @return
      */
     private LotteryRecord getOneTermNumbers(String oneTermContent) {
     	LotteryRecord lotteryRecord = new LotteryRecord();
     	/**
-    	 * ï¿½?å¥–æ—¥ï¿½?
+    	 * ½±ÈÕ
     	 */
     	String ballDateRegex = ">\\d{4}-\\d{2}-\\d{2}<";
     	Pattern pattern = Pattern.compile(ballDateRegex);
@@ -220,7 +220,7 @@ public class URLLotteryBatch {
     	}
 
     	/**
-    	 * æœŸæ¬¡
+    	 * ÆÚ´Î
     	 */
     	String ballTermRegex = ">\\d{7}<";
     	pattern = Pattern.compile(ballTermRegex);
@@ -233,7 +233,7 @@ public class URLLotteryBatch {
     	}
 
     	/**
-    	 * ä¸­å¥–å·ç 
+    	 * ÖĞ½±ºÅÂë
     	 */
     	String regex = ">\\d{2}<";
     	pattern = Pattern.compile(regex);
@@ -254,9 +254,9 @@ public class URLLotteryBatch {
 }
 
 class LotteryRecord {
-    private String recordDate;	//ï¿½?å¥–æ—¥ï¿½?
-    private String lotteryTerm;	//æœŸæ¬¡
-    private String[] lotteryNumbers;	//ï¿½?å¥–å·ï¿½?
+    private String recordDate;	//½±ÈÕ
+    private String lotteryTerm;	//ÆÚ´Î
+    private String[] lotteryNumbers;	//½±ºÅ
     public String getRecordDate() {
         return recordDate;
     }
@@ -285,4 +285,55 @@ class LotteryRecord {
         return "LotteryRecord [recordDate=" + recordDate + ", lotteryTerm=" + lotteryTerm
                 + ", lotteryNumbers=" + numbers + "]";
     }
+}
+
+class DBConnection {
+
+	private final String driver = "com.hxtt.sql.access.AccessDriver";
+	String path = "";
+	private String url = "";
+	private final String user = "";
+    private final String password = "";
+    private Connection conn = null;
+
+    public DBConnection() {
+    	init();
+		try {
+			Class.forName(driver);	//JDBC-ODBCÇÅ½ÓÆ÷
+			this.conn = DriverManager.getConnection(url, user, password);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public Connection getConnection() {
+		return conn;
+	}
+
+	private Statement createStatement() throws SQLException {
+		return conn.createStatement();
+	}
+
+	private void init() {
+		String path = this.getClass().getResource("/").getPath();
+		this.path = path.substring(1, path.indexOf("classes"));
+		//String classPath = DBConnection.class.getClassLoader().getResource("").getPath();
+		this.url = "jdbc:Access:///" + this.path + "db/gxbdb.accdb";
+		System.out.println("Êı¾İ¿âurl:" + this.url);
+	}
+	
+	public void close() {
+		if (this.conn != null) {
+			try {
+				this.conn.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 }
