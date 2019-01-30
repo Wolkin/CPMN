@@ -3,6 +3,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@page import="com.db.access.operate.BettingRecord"%>
 <%@page import="java.util.Arrays"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.Connection"%>
+<%@page import="java.sql.Statement"%>
+<%@page import="com.db.access.DBConnection"%>
+<%@page import="java.sql.SQLException"%>
 
 <html>
 <head>
@@ -10,6 +15,12 @@
 <title>Insert title here</title>
 </head>
 <%
+
+	/* 获取数据库连接 */
+	ResultSet rs = null;
+	Connection conn = new DBConnection().getConnection();
+	Statement stat;
+
 	String bettingRecord = request.getParameter("bettingRecord").replace(";,", ";");
 		
 	int n = 0;
@@ -25,6 +36,24 @@
 	String[][] tempRecord = new String[n][7];
 	tempRecord = Arrays.copyOfRange(dataRecord, 0, n);
 	
+	String expect = "";
+	//获取最大一期已开奖记录
+	try {
+       	stat = conn.createStatement();
+       	String sSql = " select max(expect) as expect " + 
+      				  " from Lottery_Result " + 
+        			  " where 1 = 1 " + 
+        			  " order by expect desc ";
+       	rs = stat.executeQuery(sSql);
+     	if(rs.next()) {
+     		expect = String.valueOf(Integer.parseInt(rs.getString("expect")) + 1);
+     	}
+     	rs.getStatement().close();
+     	
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 	//控制台输出押注彩票日志记录
 	System.out.println("彩票押注数据信息日志：");
 	for(int m = 0 ; m < tempRecord.length ; m ++) {
@@ -36,7 +65,7 @@
 	
 	//数据插入数据库记录
 	BettingRecord record = new BettingRecord();
-	record.insertRecord("20190116","勾丝",tempRecord);
+	record.insertRecord(expect,"勾丝",tempRecord);
 	
 %>
 <body>
