@@ -41,7 +41,7 @@ public class DBConnection {
 		this.path = path.substring(1, path.indexOf("classes"));
 		//String classPath = DBConnection.class.getClassLoader().getResource("").getPath();
 		this.url = "jdbc:Access:///" + this.path + "db/gxbdb.accdb";
-		System.out.println("数据库url:" + this.url);
+		//System.out.println("数据库url:" + this.url);
 	}
 	
 	public void close() {
