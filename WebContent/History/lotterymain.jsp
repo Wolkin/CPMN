@@ -119,14 +119,14 @@
             %>
 		                                <tr>
 		                                    <td><%=rs.getString("expect") %></td>
-		                                    <td> 
-			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 8px;border-radius:20px"><%=rs.getString("redball1") %></em>
-			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 8px;border-radius:20px"><%=rs.getString("redball2") %></em>
-			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 8px;border-radius:20px"><%=rs.getString("redball3") %></em>
-			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 8px;border-radius:20px"><%=rs.getString("redball4") %></em>
-			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 8px;border-radius:20px"><%=rs.getString("redball5") %></em>
-			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 8px;border-radius:20px"><%=rs.getString("redball6") %></em>
-			                                    <em style="display:inline-block;border-color:blue;background:blue;border:1px solid #000; padding:2px 8px;border-radius:20px"><%=rs.getString("blueball") %></em>
+		                                    <td>
+			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 4px;border-radius:20px"><%=rs.getString("redball1") %></em>
+			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 4px;border-radius:20px"><%=rs.getString("redball2") %></em>
+			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 4px;border-radius:20px"><%=rs.getString("redball3") %></em>
+			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 4px;border-radius:20px"><%=rs.getString("redball4") %></em>
+			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 4px;border-radius:20px"><%=rs.getString("redball5") %></em>
+			                                    <em style="display:inline-block;border-color:red;background:red;border:1px solid #000; padding:2px 4px;border-radius:20px"><%=rs.getString("redball6") %></em>
+			                                    <em style="display:inline-block;border-color:blue;background:blue;border:1px solid #000; padding:2px 4px;border-radius:20px"><%=rs.getString("blueball") %></em>
 		                                    </td>
 		                                    <td><%=rs.getString("opentime") %></td>
 		                                </tr>
