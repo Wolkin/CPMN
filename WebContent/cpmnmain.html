@@ -246,12 +246,13 @@
 			}
 			if(confirm('你确定提交押注吗？')) {
 				var a = document.createElement("a");
-				a.setAttribute("href", "DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord);
+				a.setAttribute("href", "DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord + "&rand=" + Math.abs(Math.sin(new Date().getTime())).toString().substr(2));
+				a.setAttribute("id", "betting")
 				a.setAttribute("target", "_blank");
 				document.body.appendChild(a);
 				a.click(); //执行当前对象
-				window.location.reload();
 			}
+			window.location.reload();
 		}
 	</script>
 </html>

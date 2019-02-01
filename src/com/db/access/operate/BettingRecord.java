@@ -1,6 +1,7 @@
 package com.db.access.operate;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
@@ -27,13 +28,13 @@ public class BettingRecord {
 	 * 
 	 * @param data[][]
 	 */
-	public void insertRecord(String expect,String user,String[][] data) {
+	public void insertRecord(String expect,String user,String[][] data,String rand) {
 		String[] temp = new String[7];
 		for(int count = 0 ; count < data.length ; count++) {
 			for(int n = 0 ; n < data[count].length ; n++) {
 				temp[n] = data[count][n];
 			}
-			insertRecord(expect,user,temp);
+			insertRecord(expect,user,temp,rand);
 		}
 	}
 	
@@ -41,9 +42,9 @@ public class BettingRecord {
 	 * 
 	 * @param data[]
 	 */
-	public void insertRecord(String expect,String user,String[] data) {
+	public void insertRecord(String expect,String user,String[] data,String rand) {
 		if(data.length == 7) {
-			insertRecord(expect,user,data[0],data[1],data[2],data[3],data[4],data[5],data[6]);
+			insertRecord(expect,user,data[0],data[1],data[2],data[3],data[4],data[5],data[6],rand);
 		}else {
 			System.out.println("传入参数异常，字段长度错误!");
 		}
@@ -62,10 +63,10 @@ public class BettingRecord {
 	 * @param blueball
 	 */
 	public void insertRecord(String expect,String user,String redball1,String redball2,String redball3,String redball4,String redball5,String redball6,
-			String blueball) {
+			String blueball,String rand) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String guessDate = df.format(new Date());
-		String sSql = " insert into betting_record(expect,user,redball1,redball2,redball3,redball4,redball5,redball6,blueball,isuse,investment,inputdate) " + 
+		String sSql = " insert into betting_record(expect,user,redball1,redball2,redball3,redball4,redball5,redball6,blueball,isuse,investment,inputdate,random) " + 
 					  " values('" + expect + "'," + 
 					  " '" + user + "'," + 
 					  " '" + redball1 + "'," + 
@@ -77,15 +78,29 @@ public class BettingRecord {
 					  " '" + blueball + "'," + 
 					  " 'N'," + 
 					  " 1," + 
-					  " '" + guessDate + "')";
+					  " '" + guessDate + "'," + 
+					  " '" + rand + "')";
+		
+		String isSql = " select count(1) as num from betting_record where random = '" + rand + "' ";
 		
 		Connection conn = new DBConnection().getConnection();
 		Statement stat = null;
+		Statement stat1 = null;
 		
 		try {
 			stat = conn.createStatement();
+			stat1 = conn.createStatement();
+			ResultSet rs = stat1.executeQuery(isSql);
+			if(rs.next()) {
+				if(rs.getInt("num") > 0) {
+					System.out.println("已经存在该期记录！");
+				}else {
+					stat.execute(sSql);
+				}
+			}
+			rs.getStatement().close();
 			System.out.println(sSql);
-			stat.execute(sSql);
+			
 			stat.close();
 			conn.close();
 		} catch (SQLException e) {

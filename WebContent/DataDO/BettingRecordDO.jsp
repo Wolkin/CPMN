@@ -22,7 +22,8 @@
 	Statement stat;
 
 	String bettingRecord = request.getParameter("bettingRecord").replace(";,", ";");
-		
+	String rand = request.getParameter("rand");
+	
 	int n = 0;
 	String[][] dataRecord = new String[10][7];
 	String rRecord[] = bettingRecord.split(";");
@@ -65,8 +66,7 @@
 	
 	//数据插入数据库记录
 	BettingRecord record = new BettingRecord();
-	record.insertRecord(expect,"勾丝",tempRecord);
-	
+	record.insertRecord(expect,"勾丝",tempRecord,rand);
 %>
 <body>
 	
