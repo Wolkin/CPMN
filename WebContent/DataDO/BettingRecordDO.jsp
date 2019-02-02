@@ -24,6 +24,8 @@
 	String bettingRecord = request.getParameter("bettingRecord").replace(";,", ";");
 	String rand = request.getParameter("rand");
 	
+	String nickName = session.getAttribute("nickName").toString();
+	
 	int n = 0;
 	String[][] dataRecord = new String[10][7];
 	String rRecord[] = bettingRecord.split(";");
@@ -66,7 +68,7 @@
 	
 	//数据插入数据库记录
 	BettingRecord record = new BettingRecord();
-	record.insertRecord(expect,"勾丝",tempRecord,rand);
+	record.insertRecord(expect,nickName,tempRecord,rand);
 %>
 <body>
 	

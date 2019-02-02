@@ -16,10 +16,22 @@
 		<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</head>
 	<%
+		//定义授权变量
 		String isSuccess = "false";
 		String access_token = "";
 		String refresh_token = "";
 		String expires_date = "";
+		
+		//定义用户信息
+		JSONObject jsonUserD = null;
+		String uuid = "";
+		String nickName = "";
+		int memberNumber = 0;
+		int founder = 0;
+		long registerDate = 0;
+		boolean isKyc = false;
+		boolean isTwoElement = false;
+		String heads = "";
 		
 		String code = request.getParameter("code");
 		System.out.println("用户授权代码code【" + code + "】！");
@@ -50,10 +62,43 @@
 				
 				String userDataUrl = "https://sandbox.blockcity.gxb.io/openapi/user/baseinfo?client_id=rp66crdix9vncse7&method=user.baseinfo&access_token=" + access_token + "&timestamp=" + timestamp + "&sign=" + sign;
 				String userData = URLWebPageInfoGET.getURLPageInfo(userDataUrl);
-				System.out.println("用户数据userData：" + userData);
 				
+				//用户数据解析
+				JSONObject jsonUser = new JSONObject(userData);
+				String ucode = jsonUser.get("code").toString();
+				if("0".equals(ucode)) {
+					System.out.println("-----------------初始化用户信息-----------------");
+					jsonUserD = new JSONObject(jsonUser.get("data").toString());
+					uuid = jsonUserD.get("uuid").toString();
+					nickName = jsonUserD.get("nickName").toString();
+					memberNumber = jsonUserD.getInt("memberNumber");
+					founder = jsonUserD.getInt("founder");
+					registerDate = jsonUserD.getLong("registerDate");
+					isKyc = jsonUserD.getBoolean("isKyc");
+					isTwoElement = jsonUserD.getBoolean("isTwoElement");
+					
+					session.setAttribute("jsonUserD", jsonUserD);
+					session.setAttribute("uuid", uuid);
+					session.setAttribute("nickName", nickName);
+					session.setAttribute("memberNumber", memberNumber);
+					session.setAttribute("founder", founder);
+					session.setAttribute("registerDate", registerDate);
+					session.setAttribute("isKyc", isKyc);
+					session.setAttribute("isTwoElement", isTwoElement);
+				}
 			}
 		}
+		
+		
+		uuid = session.getAttribute("uuid").toString();
+		nickName = session.getAttribute("nickName").toString();
+		memberNumber = Integer.parseInt(session.getAttribute("memberNumber").toString());
+		founder = Integer.parseInt(session.getAttribute("founder").toString());
+		registerDate = Long.parseLong(session.getAttribute("registerDate").toString());
+		isKyc = Boolean.parseBoolean(session.getAttribute("isKyc").toString());
+		isTwoElement = Boolean.parseBoolean(session.getAttribute("isTwoElement").toString());
+		
+		System.out.println("-----------" + uuid);
 		
 	%>
 	<body>
