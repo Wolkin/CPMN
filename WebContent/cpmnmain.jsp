@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page import="com.web.util.URLWebPageInfoGET"%>
+<%@page import="org.json.JSONObject"%>
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
+
 <html>
 	<head>
 		<meta charset="utf-8"> 
@@ -10,6 +15,47 @@
 		<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 		<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	</head>
+	<%
+		String isSuccess = "false";
+		String access_token = "";
+		String refresh_token = "";
+		String expires_date = "";
+		
+		String code = request.getParameter("code");
+		System.out.println("用户授权代码code【" + code + "】！");
+		String accessTokenUrl = "https://sandbox.blockcity.gxb.io/auth/oauth/access_token?client_id=rp66crdix9vncse7&client_secret=08yofenh1fobt7f004twbeigei3ir5ej&code=" + code;
+		
+		if(code == null || "".equals(code)) {
+			System.out.println("非授权登录或已登录小应用，无需重复授权！");
+		}else {
+			String accessToken = URLWebPageInfoGET.getURLPageInfo(accessTokenUrl);
+			System.out.println("accessToken:" + accessToken);
+			JSONObject jsonObj = new JSONObject(accessToken);
+			isSuccess = jsonObj.get("success").toString();
+			if("true".equals(isSuccess)) {
+				JSONObject jsonData = new JSONObject(jsonObj.get("data").toString());
+				access_token = jsonData.get("access_token").toString();
+				refresh_token = jsonData.get("refresh_token").toString();
+				expires_date = jsonData.get("expires_date").toString();
+				String timestamp = String.valueOf(System.currentTimeMillis());
+				//定义参数
+				Map params = new HashMap();
+				params.put("client_id","rp66crdix9vncse7");
+				params.put("method","user.baseinfo");
+				params.put("access_token",access_token);
+				params.put("timestamp",timestamp);
+				params.put("client_secret","08yofenh1fobt7f004twbeigei3ir5ej");
+				
+				String sign = URLWebPageInfoGET.signRequest(params);
+				
+				String userDataUrl = "https://sandbox.blockcity.gxb.io/openapi/user/baseinfo?client_id=rp66crdix9vncse7&method=user.baseinfo&access_token=" + access_token + "&timestamp=" + timestamp + "&sign=" + sign;
+				String userData = URLWebPageInfoGET.getURLPageInfo(userDataUrl);
+				System.out.println("用户数据userData：" + userData);
+				
+			}
+		}
+		
+	%>
 	<body>
 		<div class="container-fluid">
 			<div class="row-fluid">

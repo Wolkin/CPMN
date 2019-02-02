@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.Map;
+
+import org.apache.commons.codec.digest.DigestUtils;
 
 public class URLWebPageInfoGET {
 	
@@ -28,7 +30,7 @@ public class URLWebPageInfoGET {
 			//httpUrl.setRequestProperty("Accept-Language", "zh-cn");
 			//httpUrl.setRequestProperty("UA-CPU", "x86");
 			//httpUrl.setRequestProperty("Accept-Encoding", "gzip");
-			httpUrl.setRequestProperty("Content-type", "text/html");
+			httpUrl.setRequestProperty("Content-type", "application/json");
 			//httpUrl.setRequestProperty("Connection", "close");
 			httpUrl.setUseCaches(false);
 	        httpUrl.setConnectTimeout(6 * 1000);
@@ -78,30 +80,21 @@ public class URLWebPageInfoGET {
 		return returnStr;
 	}
 	
-	public static String urlEncode(String url) {
-		if(url == null) {
-            return null;
-        }
-        
-        final String reserved_char = ";/?:@=&";
-        String ret = "";
-        for(int i=0; i < url.length(); i++) {
-            String cs = String.valueOf( url.charAt(i) );
-            if(reserved_char.contains(cs)){
-                ret += cs;
-            }else{
-                try {
-					ret += URLEncoder.encode(cs, "utf-8");
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-            }
-        }
-        return ret.replace("+", "%20");
+	public static String signRequest(Map params){
+		// 第一步：对参数进行ASCII排序
+		String[] keys = (String[]) params.keySet().toArray(new String[0]);
+		Arrays.sort(keys);
+		// 第二步：把所有参数名和参数值串在一起
+		StringBuilder query = new StringBuilder();
+		for (String key : keys) {
+			String value = params.get(key).toString();
+	        query.append(key).append(value);
+		}
+		// 第三步：md5加密
+		return DigestUtils.md5Hex(query.toString());
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(urlEncode("http://www.geekdev.club/CPMN/cpmnmain.html"));
+		
 	}
 }
