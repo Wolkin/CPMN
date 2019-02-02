@@ -80,7 +80,7 @@
 					</div>
 					<ul class="nav nav-tabs">
 						<li>
-							<a href="../cpmnmain.html"><b>彩票竞猜</b></a>
+							<a href="../cpmnmain.jsp"><b>彩票竞猜</b></a>
 						</li>
 						<li>
 							<a href="../History/historymain.jsp"><b>投注记录</b></a>
