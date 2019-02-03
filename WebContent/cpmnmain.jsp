@@ -337,7 +337,7 @@
 				}
 				bettingRecord[r] = temp + ";";
 			}
-			if(confirm('你确定提交押注吗？\n需支付【' + iCount + '个GXC】！')) {
+			if(confirm('你确定提交押注吗？\n需支付【' + (iCount + 1) + '个GXC】！')) {
 				var a = document.createElement("a");
 				a.setAttribute("href", "DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord + "&rand=" + Math.abs(Math.sin(new Date().getTime())).toString().substr(2));
 				a.setAttribute("id", "betting")
