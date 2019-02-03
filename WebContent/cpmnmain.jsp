@@ -338,8 +338,14 @@
 				bettingRecord[r] = temp + ";";
 			}
 			if(confirm('你确定提交押注吗？\n需支付【' + (iCount + 1) + '个GXC】！')) {
+				var passWord = prompt("请输入密码进行支付...");
+				if(typeof(passWord) == "undefined" || passWord == null || passWord == "") {
+					alert("支付密码不合法！");
+					return false;
+				}
+				
 				var a = document.createElement("a");
-				a.setAttribute("href", "DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord + "&rand=" + Math.abs(Math.sin(new Date().getTime())).toString().substr(2));
+				a.setAttribute("href", "DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord + "&passWord=" + passWord + "&rand=" + Math.abs(Math.sin(new Date().getTime())).toString().substr(2));
 				a.setAttribute("id", "betting")
 				a.setAttribute("target", "_blank");
 				document.body.appendChild(a);

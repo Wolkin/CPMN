@@ -22,9 +22,19 @@
 	Statement stat;
 
 	String bettingRecord = request.getParameter("bettingRecord").replace(";,", ";");
+	String passWord = request.getParameter("passWord").trim();
 	String rand = request.getParameter("rand");
 	
 	String nickName = session.getAttribute("nickName").toString();
+	
+	/**
+	 * 以下实现转账交易
+	 */
+	String transferUrl = "https://sandbox.blockcity.gxb.io/api/blockpay/api/gateway?app_id=rp66crdix9vncse7&method=blockpay.trade.transfer&timestamp=&version=1.0&notify_url=&biz_content=&sign=";
+	
+	
+	/*完成转账交易*/
+	
 	
 	int n = 0;
 	String[][] dataRecord = new String[10][7];
