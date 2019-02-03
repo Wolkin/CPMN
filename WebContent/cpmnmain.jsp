@@ -90,13 +90,13 @@
 		}
 		
 		
-		uuid = session.getAttribute("uuid").toString();
-		nickName = session.getAttribute("nickName").toString();
-		memberNumber = Integer.parseInt(session.getAttribute("memberNumber").toString());
-		founder = Integer.parseInt(session.getAttribute("founder").toString());
-		registerDate = Long.parseLong(session.getAttribute("registerDate").toString());
-		isKyc = Boolean.parseBoolean(session.getAttribute("isKyc").toString());
-		isTwoElement = Boolean.parseBoolean(session.getAttribute("isTwoElement").toString());
+		uuid = (session.getAttribute("uuid")==null?"":session.getAttribute("uuid")).toString();
+		nickName = (session.getAttribute("nickName")==null?"":session.getAttribute("nickName")).toString();
+		memberNumber = Integer.parseInt(session.getAttribute("memberNumber")==null?"0":session.getAttribute("memberNumber").toString());
+		founder = Integer.parseInt(session.getAttribute("founder")==null?"0":session.getAttribute("founder").toString());
+		registerDate = Long.parseLong(session.getAttribute("registerDate")==null?"0":session.getAttribute("registerDate").toString());
+		isKyc = Boolean.parseBoolean(session.getAttribute("isKyc")==null?"false":session.getAttribute("isKyc").toString());
+		isTwoElement = Boolean.parseBoolean(session.getAttribute("isTwoElement")==null?"false":session.getAttribute("isTwoElement").toString());
 		
 		System.out.println("-----------" + uuid);
 		
@@ -337,7 +337,7 @@
 				}
 				bettingRecord[r] = temp + ";";
 			}
-			if(confirm('你确定提交押注吗？')) {
+			if(confirm('你确定提交押注吗？\n需支付【' + iCount + '个GXC】！')) {
 				var a = document.createElement("a");
 				a.setAttribute("href", "DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord + "&rand=" + Math.abs(Math.sin(new Date().getTime())).toString().substr(2));
 				a.setAttribute("id", "betting")
