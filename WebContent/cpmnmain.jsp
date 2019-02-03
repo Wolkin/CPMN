@@ -346,7 +346,7 @@
 				a.click(); //执行当前对象
 			}
 			window.location.reload();
-			alert("完成押注！");
+			alert("完成押注，等待开奖...");
 		}
 	</script>
 </html>
