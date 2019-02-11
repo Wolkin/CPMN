@@ -95,10 +95,10 @@ public class BettingRecord {
 			stat1 = conn.createStatement();
 			ResultSet rs = stat1.executeQuery(isSql);
 			if(rs.next()) {
-				if(rs.getInt("num") > this.record) {
-					System.out.println("已经存在该期记录！");
-				}else {
+				if(rs.getInt("num") <= this.record) {
 					stat.execute(sSql);
+				}else {
+					System.out.println("已经存在该期记录！");
 				}
 			}
 			rs.getStatement().close();
