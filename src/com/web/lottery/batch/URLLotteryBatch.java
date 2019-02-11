@@ -321,7 +321,7 @@ class DBConnection {
 	private void init() {
 		String path = this.getClass().getResource("/").getPath();
 		if(!path.contains("classes")) {
-			path = path + "classes/";
+			path = "/C:/WebApp/apache-tomcat-7.0.82/webapps/CPMN/WEB-INF/classes/";
 		}
 		System.out.println("path:" + path);
 		this.path = path.substring(1, path.indexOf("classes"));
