@@ -10,6 +10,7 @@ import java.util.Date;
 import com.db.access.DBConnection;
 
 public class BettingRecord {
+	private int record = 0;
 	//定义投注记录字段
 	private String expect = "";     //期数
 	private String user = "";       //投注人
@@ -30,6 +31,8 @@ public class BettingRecord {
 	 */
 	public void insertRecord(String expect,String user,String[][] data,String rand) {
 		String[] temp = new String[7];
+		this.record = data.length;
+		
 		for(int count = 0 ; count < data.length ; count++) {
 			for(int n = 0 ; n < data[count].length ; n++) {
 				temp[n] = data[count][n];
@@ -92,7 +95,7 @@ public class BettingRecord {
 			stat1 = conn.createStatement();
 			ResultSet rs = stat1.executeQuery(isSql);
 			if(rs.next()) {
-				if(rs.getInt("num") > 0) {
+				if(rs.getInt("num") > this.record) {
 					System.out.println("已经存在该期记录！");
 				}else {
 					stat.execute(sSql);

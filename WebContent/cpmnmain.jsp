@@ -346,7 +346,7 @@
 				
 				var a = document.createElement("a");
 				a.setAttribute("href", "DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord + "&passWord=" + passWord + "&rand=" + Math.abs(Math.sin(new Date().getTime())).toString().substr(2));
-				a.setAttribute("id", "betting")
+				a.setAttribute("id", "betting");
 				a.setAttribute("target", "_blank");
 				document.body.appendChild(a);
 				a.click(); //执行当前对象

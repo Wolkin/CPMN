@@ -320,6 +320,10 @@ class DBConnection {
 
 	private void init() {
 		String path = this.getClass().getResource("/").getPath();
+		if(!path.contains("classes")) {
+			path = path + "classes/";
+		}
+		System.out.println("path:" + path);
 		this.path = path.substring(1, path.indexOf("classes"));
 		//String classPath = DBConnection.class.getClassLoader().getResource("").getPath();
 		this.url = "jdbc:Access:///" + this.path + "db/gxbdb.accdb";
