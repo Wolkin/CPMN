@@ -8,6 +8,10 @@
 <%@page import="java.sql.Statement"%>
 <%@page import="com.db.access.DBConnection"%>
 <%@page import="java.sql.SQLException"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.web.util.RSAUtils"%>
+<%@page import="com.web.util.URLWebPageInfoGET"%>
 
 <html>
 <head>
@@ -33,16 +37,49 @@
 	 * 以下实现转账交易
 	 */
 	String biz_content = "{" + 
-							"to_user:" + uuid + 
+							"to_user:osXdYcoFl4gOGTXHR2v08862028" + 
 							"amount:" + money + 
 							"currency:GXC" + 
 							"remark:" + 
 							"pswd:" + passWord + 
-							"" + 
+							"outTransferNo:" + uuid + 
+							"subject:CPMN" + 
 	                     "}";
 	String timestamp = String.valueOf(System.currentTimeMillis());
-	String transferUrl = "https://sandbox.blockcity.gxb.io/api/blockpay/api/gateway?app_id=rp66crdix9vncse7&method=blockpay.trade.transfer&timestamp=" + timestamp + "&version=1.0&notify_url=&biz_content=&sign=";
 	
+	RSAUtils rsa = RSAUtils.create();
+	String privateKey = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDmJHujwNl8iVyG" + 
+						"/yWNBP2oOD7Qx/igbQsaQ0T7soyUObeKjH8r5NtYN0lw2RFiAAwXJshaEPY6giMO" + 
+						"kZylxd0b+lDPqvaQTo9WZ2FvkcL3g2Jz5UFeER1Ny58p8kCK2caAnusK9ZPmEkGW" + 
+						"rU5QeELYReKY4uXWRBc6L3P88quXMh3drF+RplDd9ib1/H/QMdK/+7LkLHYwljcx" + 
+						"sj1LiHZLj5pZk50HWzgZ1XO4tOEZ+SI2GiZJT2BYkH+D+rlxPtZpENMPypk8+fgv" + 
+						"JvvMBRjD7739BlzJwrrK0Kj0BfhQ4gYKvuGlc71zld7+NG2KM4SvRqqlg8gZrLeC" + 
+						"INPCF9iJAgMBAAECggEBAMpJxReRmlkZz+ek+1exzFgBYE1ZiBNS5ZBnEop+TYy4" + 
+						"ErlIdzuYxKgMqJP1aI8QZZAv+akZAaU54CCdIuifO5Os+T0gE+uR8fHLmtxbbdjr" + 
+						"di1SlJtfRbesxDE1iz/A3fcOOKEAbMiswVP070JSAsdg3iTuQ4GLhjMRpMzwbJzO" + 
+						"uHr5bySNptgZaGZmXEpWUfNTtTQLVAbyGwkC6jc4GN0ML03t2BJI+xH5BYqew2RX" + 
+						"8nG65mSykvWCPZA+PUor/SqOtfIDPEMNvNnb6mtJiOj4lW9r5v+2dEYtb3QIn/pV" + 
+						"8cwE1XahbpofF7jVtey6vGOxaUIYpmskMk19n/8SB2UCgYEA+ug0UtkVKL3OGbOS" + 
+						"KvKdj39d0kBq1mpxuKhHj1y67fMi4BfD0wD1kZt7HfcGPQFabuJErWuHWxJPg1K6" + 
+						"urx41rahMw+ikLHHfN8ajCyGHOwTAwHlyd81mwOoI4jGlxcLz1YSarlJT2B8BDu0" + 
+						"xuGHy/LpsxkjZGlXDStrhKv+Xr8CgYEA6tBhE+zCSv2IG5+c3udfA0FNeAKGBkeJ" + 
+						"AXHlAEoeNInouoOq4rziGspT/bQeGRJ8UVindlXDHarhOWcXM1gdEv7BIHY4i9i7" + 
+						"kWfo5mzWog/lKdVjBQPCqWl/IO2EE3R/qkGB7skdrKvRZ1tVE/epNvMY2UKERLk5" + 
+						"dh9V6R1DYrcCgYAjiDjItsdhUqfaSezcOimIBdCCku7OWJqsPOCNc+NhCTqaI6Nu" + 
+						"wUcFjNA9qRrwDr4Az/hL2tt7UTeDcHbTNRejyI9BjOhHt3V5wJqg2TlQ5Tm4Bk/F" + 
+						"a9/KiRUJmzgMc44Pma/X/09bd114t//c3ll9z3O7EkdJ1AUo70o1qqnGPwKBgQDj" + 
+						"DL7xzztH28MiQsIi30KGGTzZUEdcBwu5M/Ikx4ZRcxBwWSSBvfY7xWxVozZ/M9q1" + 
+						"pa23xNG3/CVvpflPEmJ6nY8M3oNq5hToUrtnI9KePhRu0QDANpShz3q30jKlxT40" + 
+						"2MbUp+9jqXgAItYvSoh6s7FRUvomoZuoVkBx+nPQHQKBgQCY6foNgx6XPQMMCsMe" + 
+						"lKk+jS4vGnEPpMwkP5w3MlivP6MC+zdi3yxC3cNdkJpAR6nJeeTqaFV/bp7HyozB" + 
+						"Q9UKS+n2HcaY1QFRZibAcvOT4jiZkS9g4peQBt0AawM+OrsToET1Q1r6MRebnXvI" + 
+						"2FtbL+rgKMqlflNfR1TgS+1NUA==";
+	String sign = rsa.encodeByPrivateKey(biz_content+timestamp, privateKey);
+	
+	String transferUrl = "https://sandbox.blockcity.gxb.io/api/blockpay/api/gateway?app_id=rp66crdix9vncse7&method=blockpay.trade.transfer&timestamp=" + timestamp + "&version=1.0&notify_url=&biz_content=" + biz_content + "&sign=" + sign;
+	String payData = URLWebPageInfoGET.getURLPageInfo(transferUrl);
+	
+	System.out.println("转账信息：" + payData.toString());
 	
 	/*完成转账交易*/
 	
