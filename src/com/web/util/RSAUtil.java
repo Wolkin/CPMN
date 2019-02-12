@@ -17,21 +17,21 @@ import java.security.spec.X509EncodedKeySpec;
  * @date 2019-2-12
  * @version 1.0
  */
-public class RSAUtils {
+public class RSAUtil {
 	public static final String KEY_ALGORITHM = "RSA";
     public static final String split = " ";//分隔符
     public static final int max = 117; //加密分段长度//不可超过117
 
-    private static RSAUtils me;
-    private RSAUtils(){}//单例
+    private static RSAUtil me;
+    private RSAUtil(){}//单例
     
     /**
      * RSA 公钥 私钥对
      * @return
      */
-    public static RSAUtils create(){
+    public static RSAUtil create(){
         if (me==null) {
-            me = new RSAUtils();
+            me = new RSAUtil();
         }
         //生成公钥、私钥
         try {
@@ -239,7 +239,7 @@ public class RSAUtils {
     }
     
     public static void main(String ...args){
-        RSAUtils rsa = RSAUtils.create();
+        RSAUtil rsa = RSAUtil.create();
         String pubKey = rsa.getPublicKey();
         String priKey = rsa.getPrivateKey();
 
