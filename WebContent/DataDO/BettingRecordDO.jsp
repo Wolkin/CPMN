@@ -12,6 +12,10 @@
 <%@page import="java.util.Map"%>
 <%@page import="com.web.util.URLWebPageInfoGET"%>
 <%@page import="com.web.util.RsaSignature"%>
+<%@page import="com.gxs.block.pay.InitPayParam"%>
+<%@page import="com.gxs.block.pay.PayCommonParam"%>
+<%@page import="java.math.BigDecimal"%>
+<%@page import="com.alibaba.fastjson.JSON"%>
 
 <html>
 <head>
@@ -45,7 +49,7 @@
 							"outTransferNo:" + uuid + 
 							"subject:CPMN" + 
 	                     "}";
-	String timestamp = String.valueOf(System.currentTimeMillis());
+	long timestamp = System.currentTimeMillis();
 	
 	String privateKey = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDmJHujwNl8iVyG" + 
 						"/yWNBP2oOD7Qx/igbQsaQ0T7soyUObeKjH8r5NtYN0lw2RFiAAwXJshaEPY6giMO" + 
@@ -77,10 +81,26 @@
 	String sign = RsaSignature.rsaSign(biz_content+timestamp, privateKey);
 	System.out.println("加密报文：" + sign);
 	
+	PayCommonParam param = new PayCommonParam();
+    param.setApp_id("rp66crdix9vncse7");
+    param.setMethod("blockpay.trade.transfer");
+    param.setNotify_url("");
+    param.setTimestamp(timestamp);
+    param.setVersion("1.0.0");
+    InitPayParam initPayParam = new InitPayParam();
+    initPayParam.setSeller_id("osXdYcoFl4gOGTXHR2v08862028");
+    initPayParam.setCurrency("GXC");
+    initPayParam.setOut_trade_no(uuid);
+    initPayParam.setSubject("CPMN");
+    initPayParam.setTotal_amount(new BigDecimal(money));
+    param.setBiz_content(JSON.toJSONString(initPayParam));
+    param.setSign(RsaSignature.rsaSign(param.getBiz_content()+param.getTimestamp(), "rsa私钥"));
+    System.out.println(JSON.toJSONString(param));
+	
 	String transferUrl = "https://sandbox.blockcity.gxb.io/api/blockpay/api/gateway?app_id=rp66crdix9vncse7&method=blockpay.trade.transfer&timestamp=" + timestamp + "&version=1.0&notify_url=&biz_content=" + biz_content + "&sign=" + sign;
 	String payData = URLWebPageInfoGET.getURLPageInfo(transferUrl);
 	
-	System.out.println("转账信息：" + payData.toString());
+	System.out.println("转账信息：" + payData);
 	
 	/*完成转账交易*/
 	
