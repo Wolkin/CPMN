@@ -29,7 +29,7 @@ public class BettingRecord {
 	 * 
 	 * @param data[][]
 	 */
-	public void insertRecord(String expect,String user,String[][] data,String rand) {
+	public void insertRecord(String expect,String uuid,String user,String[][] data,String rand) {
 		String[] temp = new String[7];
 		this.record = data.length;
 		
@@ -37,7 +37,7 @@ public class BettingRecord {
 			for(int n = 0 ; n < data[count].length ; n++) {
 				temp[n] = data[count][n];
 			}
-			insertRecord(expect,user,temp,rand);
+			insertRecord(expect,uuid,user,temp,rand);
 		}
 	}
 	
@@ -45,9 +45,9 @@ public class BettingRecord {
 	 * 
 	 * @param data[]
 	 */
-	public void insertRecord(String expect,String user,String[] data,String rand) {
+	public void insertRecord(String expect,String uuid,String user,String[] data,String rand) {
 		if(data.length == 7) {
-			insertRecord(expect,user,data[0],data[1],data[2],data[3],data[4],data[5],data[6],rand);
+			insertRecord(expect,uuid,user,data[0],data[1],data[2],data[3],data[4],data[5],data[6],rand);
 		}else {
 			System.out.println("传入参数异常，字段长度错误!");
 		}
@@ -65,12 +65,13 @@ public class BettingRecord {
 	 * @param redball6
 	 * @param blueball
 	 */
-	public void insertRecord(String expect,String user,String redball1,String redball2,String redball3,String redball4,String redball5,String redball6,
+	public void insertRecord(String expect,String uuid,String user,String redball1,String redball2,String redball3,String redball4,String redball5,String redball6,
 			String blueball,String rand) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String guessDate = df.format(new Date());
-		String sSql = " insert into betting_record(expect,user,redball1,redball2,redball3,redball4,redball5,redball6,blueball,isuse,investment,inputdate,random) " + 
+		String sSql = " insert into betting_record(expect,uuid,user,redball1,redball2,redball3,redball4,redball5,redball6,blueball,isuse,investment,inputdate,random) " + 
 					  " values('" + expect + "'," + 
+					  " '" + uuid + "'," + 
 					  " '" + user + "'," + 
 					  " '" + redball1 + "'," + 
 					  " '" + redball2 + "'," + 

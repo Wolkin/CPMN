@@ -229,6 +229,10 @@
 		
 		//添加一注彩票，当前彩票下增加一行
 		function addOne() {
+			if(iCount >= 9){
+				alert("单次最多投注10注！");
+				return;
+			}
 			var dtr = document.getElementById("tr" + iCount);
 			var dd = dtr.parentNode;
 			var newNodeTR = document.createElement("tr");
@@ -345,7 +349,7 @@
 				}
 				
 				var a = document.createElement("a");
-				a.setAttribute("href", "DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord + "&passWord=" + passWord + "&rand=" + Math.abs(Math.sin(new Date().getTime())).toString().substr(2));
+				a.setAttribute("href", "DataDO/BettingRecordDO.jsp?bettingRecord=" + bettingRecord + "&passWord=" + passWord + "&money=" + (iCount + 1) + "&rand=" + Math.abs(Math.sin(new Date().getTime())).toString().substr(2));
 				a.setAttribute("id", "betting");
 				a.setAttribute("target", "_blank");
 				document.body.appendChild(a);

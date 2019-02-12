@@ -23,18 +23,28 @@
 
 	String bettingRecord = request.getParameter("bettingRecord").replace(";,", ";");
 	String passWord = request.getParameter("passWord").trim();
+	int money = Integer.parseInt(request.getParameter("money").trim());
 	String rand = request.getParameter("rand");
 	
+	String uuid = session.getAttribute("uuid").toString();
 	String nickName = session.getAttribute("nickName").toString();
 	
 	/**
 	 * 以下实现转账交易
 	 */
-	String transferUrl = "https://sandbox.blockcity.gxb.io/api/blockpay/api/gateway?app_id=rp66crdix9vncse7&method=blockpay.trade.transfer&timestamp=&version=1.0&notify_url=&biz_content=&sign=";
+	String biz_content = "{" + 
+							"to_user:" + uuid + 
+							"amount:" + money + 
+							"currency:GXC" + 
+							"remark:" + 
+							"pswd:" + passWord + 
+							"" + 
+	                     "}";
+	String timestamp = String.valueOf(System.currentTimeMillis());
+	String transferUrl = "https://sandbox.blockcity.gxb.io/api/blockpay/api/gateway?app_id=rp66crdix9vncse7&method=blockpay.trade.transfer&timestamp=" + timestamp + "&version=1.0&notify_url=&biz_content=&sign=";
 	
 	
 	/*完成转账交易*/
-	
 	
 	int n = 0;
 	String[][] dataRecord = new String[10][7];
@@ -78,7 +88,7 @@
 	
 	//数据插入数据库记录
 	BettingRecord record = new BettingRecord();
-	record.insertRecord(expect,nickName,tempRecord,rand);
+	record.insertRecord(expect,uuid,nickName,tempRecord,rand);
 %>
 <body>
 	
