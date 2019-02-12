@@ -10,8 +10,8 @@
 <%@page import="java.sql.SQLException"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
-<%@page import="com.web.util.RSAUtils"%>
 <%@page import="com.web.util.URLWebPageInfoGET"%>
+<%@page import="com.web.util.RsaSignature"%>
 
 <html>
 <head>
@@ -47,7 +47,6 @@
 	                     "}";
 	String timestamp = String.valueOf(System.currentTimeMillis());
 	
-	RSAUtils rsa = RSAUtils.create();
 	String privateKey = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDmJHujwNl8iVyG" + 
 						"/yWNBP2oOD7Qx/igbQsaQ0T7soyUObeKjH8r5NtYN0lw2RFiAAwXJshaEPY6giMO" + 
 						"kZylxd0b+lDPqvaQTo9WZ2FvkcL3g2Jz5UFeER1Ny58p8kCK2caAnusK9ZPmEkGW" + 
@@ -74,7 +73,9 @@
 						"lKk+jS4vGnEPpMwkP5w3MlivP6MC+zdi3yxC3cNdkJpAR6nJeeTqaFV/bp7HyozB" + 
 						"Q9UKS+n2HcaY1QFRZibAcvOT4jiZkS9g4peQBt0AawM+OrsToET1Q1r6MRebnXvI" + 
 						"2FtbL+rgKMqlflNfR1TgS+1NUA==";
-	String sign = rsa.encodeByPrivateKey(biz_content+timestamp, privateKey);
+	System.out.println("-----------测试-----------");
+	String sign = RsaSignature.rsaSign(biz_content+timestamp, privateKey);
+	System.out.println("加密报文：" + sign);
 	
 	String transferUrl = "https://sandbox.blockcity.gxb.io/api/blockpay/api/gateway?app_id=rp66crdix9vncse7&method=blockpay.trade.transfer&timestamp=" + timestamp + "&version=1.0&notify_url=&biz_content=" + biz_content + "&sign=" + sign;
 	String payData = URLWebPageInfoGET.getURLPageInfo(transferUrl);
