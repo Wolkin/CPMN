@@ -81,6 +81,7 @@
 	String sign = RsaSignature.rsaSign(biz_content+timestamp, privateKey);
 	System.out.println("加密报文：" + sign);
 	
+	/*
 	PayCommonParam param = new PayCommonParam();
     param.setApp_id("rp66crdix9vncse7");
     param.setMethod("blockpay.trade.transfer");
@@ -94,11 +95,22 @@
     initPayParam.setSubject("CPMN");
     initPayParam.setTotal_amount(new BigDecimal(money));
     param.setBiz_content(JSON.toJSONString(initPayParam));
-    param.setSign(RsaSignature.rsaSign(param.getBiz_content()+param.getTimestamp(), "rsa私钥"));
+    param.setSign(RsaSignature.rsaSign(param.getBiz_content()+param.getTimestamp(), privateKey));
     System.out.println(JSON.toJSONString(param));
+    sign = param.getSign();
+    */
+    String params = "{" + 
+						"\"app_id\": \"rp66crdix9vncse7\", " + 
+						"\"method\": \"blockpay.trade.transfer\", " + 
+						"\"timestamp\":\"" + timestamp + "\", " + 
+						"\"version\": \"1.0\", " + 
+						"\"notify_url\": \"\", " + 
+						"\"biz_content\":\"" + biz_content + "\", " + 
+						"\"sign\":\"" + sign + "\", " + 
+					"}";
+	String transferUrl = "https://sandbox.blockcity.gxb.io/api/blockpay/api/gateway";
 	
-	String transferUrl = "https://sandbox.blockcity.gxb.io/api/blockpay/api/gateway?app_id=rp66crdix9vncse7&method=blockpay.trade.transfer&timestamp=" + timestamp + "&version=1.0&notify_url=&biz_content=" + biz_content + "&sign=" + sign;
-	String payData = URLWebPageInfoGET.getURLPageInfo(transferUrl);
+	String payData = URLWebPageInfoGET.urlHttpRequestDO(transferUrl,params);
 	
 	System.out.println("转账信息：" + payData);
 	
