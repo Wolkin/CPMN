@@ -85,7 +85,7 @@
 						"\"app_id\":\"rp66crdix9vncse7\"," + 
 						"\"method\":\"blockpay.trade.transfer\"," + 
 						"\"timestamp\":" + timestamp + "," + 
-						"\"version\":\"1.0\"," + 
+						"\"version\":\"1.0.0\"," + 
 						"\"notify_url\":\"\"," + 
 						"\"biz_content\":" + biz_content + "," + 
 						"\"sign\":\"" + sign + "\"" + 

@@ -100,10 +100,12 @@ public class URLWebPageInfoGET {
 			connection.setUseCaches(false);
 			connection.setConnectTimeout(5000);
 			//自动执行HTTP重定向 
-			connection.setInstanceFollowRedirects(false);
+			connection.setInstanceFollowRedirects(true);
 			//application/x-javascript text/xml->xml数据 application/x-javascript->json对象 application/x-www-form-urlencoded->表单数据 application/json;charset=utf-8 -> json数据
 			//设定 请求格式 json，也可以设定xml格式的
 			connection.setRequestProperty("Content-Type","application/json");
+			//设定编码格式
+			connection.setRequestProperty("Charset", "utf-8");
 			connection.connect();
 			
 			DataOutputStream out = new DataOutputStream(connection.getOutputStream());
