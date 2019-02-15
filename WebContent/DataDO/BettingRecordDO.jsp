@@ -40,17 +40,6 @@
 	/**
 	 * 以下实现转账交易
 	 */
-	String biz_content = "{" + 
-							"to_user:osXdYcoFl4gOGTXHR2v08862028" + 
-							"amount:" + money + 
-							"currency:GXC" + 
-							"remark:" + 
-							"pswd:" + passWord + 
-							"outTransferNo:" + uuid + 
-							"subject:CPMN" + 
-	                     "}";
-	long timestamp = System.currentTimeMillis();
-	
 	String privateKey = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDmJHujwNl8iVyG" + 
 						"/yWNBP2oOD7Qx/igbQsaQ0T7soyUObeKjH8r5NtYN0lw2RFiAAwXJshaEPY6giMO" + 
 						"kZylxd0b+lDPqvaQTo9WZ2FvkcL3g2Jz5UFeER1Ny58p8kCK2caAnusK9ZPmEkGW" + 
@@ -77,42 +66,38 @@
 						"lKk+jS4vGnEPpMwkP5w3MlivP6MC+zdi3yxC3cNdkJpAR6nJeeTqaFV/bp7HyozB" + 
 						"Q9UKS+n2HcaY1QFRZibAcvOT4jiZkS9g4peQBt0AawM+OrsToET1Q1r6MRebnXvI" + 
 						"2FtbL+rgKMqlflNfR1TgS+1NUA==";
-	System.out.println("-----------测试-----------");
-	String sign = RsaSignature.rsaSign(biz_content+timestamp, privateKey);
-	System.out.println("加密报文：" + sign);
 	
-	/*
-	PayCommonParam param = new PayCommonParam();
-    param.setApp_id("rp66crdix9vncse7");
-    param.setMethod("blockpay.trade.transfer");
-    param.setNotify_url("");
-    param.setTimestamp(timestamp);
-    param.setVersion("1.0.0");
-    InitPayParam initPayParam = new InitPayParam();
-    initPayParam.setSeller_id("osXdYcoFl4gOGTXHR2v08862028");
-    initPayParam.setCurrency("GXC");
-    initPayParam.setOut_trade_no(uuid);
-    initPayParam.setSubject("CPMN");
-    initPayParam.setTotal_amount(new BigDecimal(money));
-    param.setBiz_content(JSON.toJSONString(initPayParam));
-    param.setSign(RsaSignature.rsaSign(param.getBiz_content()+param.getTimestamp(), privateKey));
-    System.out.println(JSON.toJSONString(param));
-    sign = param.getSign();
-    */
+	String biz_content = "{" + 
+							"\"to_user\":\"osXdYcoFl4gOGTXHR2v08862028\"," + 
+							"\"amount\":" + money + "," + 
+							"\"currency\":\"GXC\"," + 
+							"\"remark\":\"\"," + 
+							"\"pswd\":\"" + passWord + "\"," + 
+							"\"outTransferNo\":\"" + uuid + "\"," + 
+							"\"subject\":\"CPMN\"" + 
+				         "}";
+	long timestamp = System.currentTimeMillis();
+	System.out.println("biz_content:" + biz_content);
+	
+	String sign = RsaSignature.rsaSign(biz_content+timestamp, privateKey);
+	    
     String params = "{" + 
-						"\"app_id\": \"rp66crdix9vncse7\", " + 
-						"\"method\": \"blockpay.trade.transfer\", " + 
-						"\"timestamp\":\"" + timestamp + "\", " + 
-						"\"version\": \"1.0\", " + 
-						"\"notify_url\": \"\", " + 
-						"\"biz_content\":\"" + biz_content + "\", " + 
-						"\"sign\":\"" + sign + "\", " + 
+						"\"app_id\":\"rp66crdix9vncse7\"," + 
+						"\"method\":\"blockpay.trade.transfer\"," + 
+						"\"timestamp\":" + timestamp + "," + 
+						"\"version\":\"1.0\"," + 
+						"\"notify_url\":\"\"," + 
+						"\"biz_content\":" + biz_content + "," + 
+						"\"sign\":\"" + sign + "\"" + 
 					"}";
+					
+	System.out.println("params:" + params);
+					
 	String transferUrl = "https://sandbox.blockcity.gxb.io/api/blockpay/api/gateway";
 	
 	String payData = URLWebPageInfoGET.urlHttpRequestDO(transferUrl,params);
 	
-	System.out.println("转账信息：" + payData);
+	System.out.println("转账响应信息：" + payData);
 	
 	/*完成转账交易*/
 	

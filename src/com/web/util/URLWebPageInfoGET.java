@@ -86,23 +86,21 @@ public class URLWebPageInfoGET {
 		StringBuffer buffer = new StringBuffer();
 		
 		String returnStr = "";
-		
 		try {
 			URL url = new URL(urlStr);
 			//使用URL打开一个链接
 			connection = (HttpURLConnection) url.openConnection();
-			
 			//允许输出流，即允许上传
 			connection.setDoOutput(true);
 			//允许输入流，即允许下载
-			connection.setDoInput(true);
+			//connection.setDoInput(true);
 			//使用post请求
 			connection.setRequestMethod("POST");
 			//不使用缓冲
 			connection.setUseCaches(false);
 			connection.setConnectTimeout(5000);
 			//自动执行HTTP重定向 
-			//this.connection.setInstanceFollowRedirects(false);
+			connection.setInstanceFollowRedirects(false);
 			//application/x-javascript text/xml->xml数据 application/x-javascript->json对象 application/x-www-form-urlencoded->表单数据 application/json;charset=utf-8 -> json数据
 			//设定 请求格式 json，也可以设定xml格式的
 			connection.setRequestProperty("Content-Type","application/json");
@@ -113,6 +111,8 @@ public class URLWebPageInfoGET {
             out.flush();
             out.close();
 			
+            System.out.println("转账请求响应代码：" + connection.getResponseCode());
+            
 			if(connection.getResponseCode() == 200) {
 				InputStream inputStream = connection.getInputStream();
 				
