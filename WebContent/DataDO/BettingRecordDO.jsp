@@ -67,15 +67,15 @@
 						"Q9UKS+n2HcaY1QFRZibAcvOT4jiZkS9g4peQBt0AawM+OrsToET1Q1r6MRebnXvI" + 
 						"2FtbL+rgKMqlflNfR1TgS+1NUA==";
 	
-	String biz_content = "{" + 
-							"\"to_user\":\"osXdYcoFl4gOGTXHR2v08862028\"," + 
-							"\"amount\":" + money + "," + 
-							"\"currency\":\"GXC\"," + 
-							"\"remark\":\"\"," + 
-							"\"pswd\":\"" + passWord + "\"," + 
-							"\"outTransferNo\":\"" + uuid + "\"," + 
-							"\"subject\":\"CPMN\"" + 
-				         "}";
+	String biz_content = "\"{" + 
+							"\\\"to_user\\\":\\\"osXdYcoFl4gOGTXHR2v08862028\\\"," + 
+							"\\\"amount\\\":" + money + "," + 
+							"\\\"currency\\\":\\\"GXC\\\"," + 
+							"\\\"remark\\\":\\\"\\\"," + 
+							"\\\"pswd\\\":\\\"" + passWord + "\\\"," + 
+							"\\\"outTransferNo\\\":\\\"" + uuid + "\\\"," + 
+							"\\\"subject\\\":\\\"CPMN\\\"" + 
+				         "}\"";
 	long timestamp = System.currentTimeMillis();
 	System.out.println("biz_content:" + biz_content);
 	
@@ -85,7 +85,7 @@
 						"\"app_id\":\"rp66crdix9vncse7\"," + 
 						"\"method\":\"blockpay.trade.transfer\"," + 
 						"\"timestamp\":" + timestamp + "," + 
-						"\"version\":\"1.0.0\"," + 
+						"\"version\":\"1.0\"," + 
 						"\"notify_url\":\"\"," + 
 						"\"biz_content\":" + biz_content + "," + 
 						"\"sign\":\"" + sign + "\"" + 
