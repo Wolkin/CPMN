@@ -79,6 +79,29 @@
 	long timestamp = System.currentTimeMillis();
 	System.out.println("biz_content:" + biz_content);
 	
+	/**
+	 * 官方签名方法
+	**/
+	/*
+	PayCommonParam param = new PayCommonParam();
+	param.setApp_id("rp66crdix9vncse7");
+	param.setMethod("blockpay.trade.transfer");
+	param.setNotify_url("");
+	param.setTimestamp(System.currentTimeMillis());
+	param.setVersion("1.0.0");
+	InitPayParam initPayParam = new InitPayParam();
+	initPayParam.setCurrency("GXS");
+	initPayParam.setOut_trade_no(uuid);
+	initPayParam.setSubject("CPMN");
+	initPayParam.setTotal_amount(new BigDecimal(money));
+	param.setBiz_content(JSON.toJSONString(initPayParam));
+	param.setSign(RsaSignature.rsaSign(param.getBiz_content()+param.getTimestamp(), privateKey));
+	System.out.println(JSON.toJSONString(param));
+	String sign = param.getSign();
+	*/
+	/**官方签名方法**/
+	
+	
 	String sign = RsaSignature.rsaSign(biz_content+timestamp, privateKey);
 	    
     String params = "{" + 
